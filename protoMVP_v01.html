@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>FreelanceOS - Intelligence Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: white; color: black; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .section { border: 1px solid black; margin: 10px 0; padding: 15px; }
+        .grid { display: grid; gap: 15px; }
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+        button { background: white; border: 1px solid black; padding: 8px 12px; cursor: pointer; }
+        button:hover { background: #f0f0f0; }
+        input, select, textarea { border: 1px solid black; padding: 5px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; }
+        td, th { border: 1px solid black; padding: 5px; text-align: left; }
+        .hidden { display: none; }
+        .tabs { border-bottom: 1px solid black; }
+        .tab { display: inline-block; padding: 10px; border: 1px solid black; margin-right: 5px; cursor: pointer; }
+        .tab.active { background: #f0f0f0; }
+        .metric { text-align: center; padding: 10px; border: 1px solid black; }
+        .job-item { border: 1px solid black; padding: 10px; margin: 5px 0; cursor: pointer; }
+        .job-item:hover { background: #f9f9f9; }
+        .job-item.selected { background: #e6f3ff; border-left: 4px solid blue; }
+        .client-card { border: 1px solid black; padding: 10px; margin: 5px; }
+        .project-card { border: 1px solid black; padding: 10px; margin: 5px; }
+        .lead-item { border: 1px solid black; padding: 8px; margin: 3px 0; }
+        .urgent { border-left: 3px solid red; }
+        .high-value { border-left: 3px solid green; }
+        h1, h2, h3 { margin: 10px 0; }
+        .status-active { background: #e8f5e8; }
+        .status-pending { background: #fff3cd; }
+        .status-completed { background: #d1ecf1; }
+        .personality-type { padding: 5px; margin: 2px; border: 1px solid black; display: inline-block; }
+        .task-entry { border: 1px solid black; padding: 5px; margin: 2px 0; font-size: 12px; }
+        .stats-row { display: flex; gap: 15px; margin: 10px 0; }
+        .stat-card { border: 1px solid black; padding: 10px; flex: 1; text-align: center; }
+        .job-detail-section { border: 1px solid black; margin: 10px 0; padding: 15px; }
+        .personality-badge { padding: 3px 8px; margin: 2px; border: 1px solid black; display: inline-block; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FreelanceOS - Intelligence Platform</h1>
+        
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="showSection('opportunity-intelligence')">Opportunity Intelligence</div>
+            <div class="tab" onclick="showSection('business-management')">Business Management</div>
+        </div>
+
+        <!-- Opportunity Intelligence Section (Premium Tier) -->
+        <div id="opportunity-intelligence" class="section">
+            <h2>Opportunity Intelligence & Proposal Engine</h2>
+            
+            <!-- Import and Overview -->
+            <div class="grid grid-3">
+                <div>
+                    <h3>Import Job Data</h3>
+                    <input type="file" id="csvFile" accept=".csv">
+                    <button onclick="importJobs()">Import CSV</button>
+                    <div style="margin-top:10px; font-size:12px;">
+                        Supports: Upwork, Fiverr, LinkedIn, Direct exports
+                    </div>
+                </div>
+                <div>
+                    <h3>Market Overview</h3>
+                    <div id="market-overview">No data imported</div>
+                </div>
+                <div>
+                    <h3>AI Insights</h3>
+                    <div id="ai-market-insights">
+                        <div>• Import jobs to see market analysis</div>
+                        <div>• Client psychology patterns</div>
+                        <div>• Pricing optimization tips</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Job Analysis Interface -->
+            <div class="grid grid-2">
+                <!-- Job List -->
+                <div>
+                    <h3>Job Opportunities</h3>
+                    <div>
+                        <label>Filter by Budget:</label>
+                        <select id="budget-filter" onchange="filterJobs()">
+                            <option value="">All Jobs</option>
+                            <option value="high">$1000+ (High Value)</option>
+                            <option value="medium">$500-$999 (Medium Value)</option>
+                            <option value="low">Under $500 (Quick Projects)</option>
+                        </select>
+                    </div>
+                    <div id="job-list" style="height: 600px; overflow-y: auto; border: 1px solid black; padding: 10px;">
+                        <div style="text-align: center; margin-top: 200px; color: #666;">
+                            <div>No job data loaded</div>
+                            <div style="font-size: 12px;">Import CSV to begin analysis</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Job Analysis Panel -->
+                <div>
+                    <h3>Intelligent Job Analysis</h3>
+                    <div id="job-analysis-panel" style="height: 600px; overflow-y: auto; border: 1px solid black; padding: 15px;">
+                        <div style="text-align: center; margin-top: 200px; color: #666;">
+                            <div>Select a job to begin analysis</div>
+                            <div style="font-size: 12px;">AI will analyze client psychology and generate proposals</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Management Section (Freemium Core) -->
+        <div id="business-management" class="section hidden">
+            <h2>Business Management System</h2>
+            
+            <!-- Dashboard Overview -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h4>Monthly Revenue</h4>
+                    <div id="revenue" style="font-size: 24px; font-weight: bold;">$0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Active Projects</h4>
+                    <div id="active-projects" style="font-size: 24px; font-weight: bold;">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Win Rate</h4>
+                    <div id="win-rate" style="font-size: 24px; font-weight: bold;">0%</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Avg Project Value</h4>
+                    <div id="avg-value" style="font-size: 24px; font-weight: bold;">$0</div>
+                </div>
+            </div>
+
+            <!-- Management Tabs -->
+            <div style="border-bottom: 1px solid black; margin: 20px 0;">
+                <div class="tab active" onclick="showManagementTab('clients')">Client Management</div>
+                <div class="tab" onclick="showManagementTab('projects')">Project Tracking</div>
+                <div class="tab" onclick="showManagementTab('financial')">Financial Control</div>
+                <div class="tab" onclick="showManagementTab('automation')">Automation</div>
+            </div>
+
+            <!-- Client Management -->
+            <div id="clients-mgmt" class="management-section">
+                <div class="grid grid-3">
+                    <div>
+                        <h3>Add New Client</h3>
+                        <input type="text" id="client-name" placeholder="Client Name">
+                        <input type="email" id="client-email" placeholder="Email">
+                        <input type="text" id="client-company" placeholder="Company">
+                        <input type="number" id="client-rate" placeholder="Hourly Rate">
+                        <select id="client-type">
+                            <option>Select Personality Type</option>
+                            <option>Time-Starved</option>
+                            <option>Analytical</option>
+                            <option>Creative</option>
+                            <option>Budget-Conscious</option>
+                            <option>Agency</option>
+                            <option>Executive</option>
+                        </select>
+                        <button onclick="addClient()">Add Client</button>
+                    </div>
+                    <div>
+                        <h3>Payment Tracking</h3>
+                        <div>Outstanding: $<span id="outstanding">0</span></div>
+                        <div>This Month: $<span id="this-month">0</span></div>
+                        <div>Overdue: $<span id="overdue">0</span></div>
+                        
+                        <h4 style="margin-top: 15px;">Client Stats</h4>
+                        <div>Total Clients: <span id="total-clients">0</span></div>
+                        <div>Active Projects: <span id="active-client-projects">0</span></div>
+                        <div>Avg Project Value: $<span id="avg-client-value">0</span></div>
+                    </div>
+                    <div>
+                        <h3>Analytics Insights</h3>
+                        <div id="client-analytics">
+                            <div><strong>Performance Metrics:</strong></div>
+                            <div>• Win Rate Trend: ↗ +12%</div>
+                            <div>• Avg Deal Size: ↗ +25%</div>
+                            <div>• Client Retention: 89%</div>
+                            <div>• Project On-Time: 94%</div>
+                            
+                            <div style="margin-top: 10px;"><strong>Growth Opportunities:</strong></div>
+                            <div>• Enterprise clients pay 60% premium</div>
+                            <div>• Maintenance contracts = 40% revenue</div>
+                            <div>• Mobile projects highest margins</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Client Database</h3>
+                    <div id="client-list"></div>
+                </div>
+            </div>
+
+            <!-- Project Management -->
+            <div id="projects-mgmt" class="management-section hidden">
+                <div class="grid grid-3">
+                    <div>
+                        <h3>Create Project</h3>
+                        <input type="text" id="project-name" placeholder="Project Name">
+                        <select id="project-client-select">
+                            <option>Select Client</option>
+                        </select>
+                        <input type="number" id="project-budget" placeholder="Budget">
+                        <input type="date" id="project-deadline">
+                        <button onclick="createProject()">Create Project</button>
+                    </div>
+                    <div>
+                        <h3>Time Tracker</h3>
+                        <select id="time-project">
+                            <option>Select Project</option>
+                        </select>
+                        <input type="text" id="time-task" placeholder="Task Description">
+                        <button id="time-toggle" onclick="toggleTimer()">Start Timer</button>
+                        <div>Current: <span id="current-time">00:00:00</span></div>
+                        <div>Today: <span id="today-time">0h 0m</span></div>
+                        
+                        <h4>Today's Tasks</h4>
+                        <div id="todays-tasks"></div>
+                    </div>
+                    <div>
+                        <h3>Project Stats</h3>
+                        <div>Active: <span id="active-project-count">0</span></div>
+                        <div>Completed: <span id="completed-projects">0</span></div>
+                        <div>On Schedule: <span id="on-schedule">0</span></div>
+                        <div>Overdue: <span id="overdue-projects">0</span></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Project List</h3>
+                    <div id="project-list"></div>
+                </div>
+            </div>
+
+            <!-- Financial Control -->
+            <div id="financial-mgmt" class="management-section hidden">
+                <div class="grid grid-3">
+                    <div>
+                        <h3>Revenue Tracking</h3>
+                        <div>This Month: $<span id="month-revenue">0</span></div>
+                        <div>Last Month: $<span id="last-month">0</span></div>
+                        <div>YTD: $<span id="ytd-revenue">0</span></div>
+                        <div>Projected: $<span id="projected">0</span></div>
+                    </div>
+                    <div>
+                        <h3>Expenses</h3>
+                        <input type="text" id="expense-desc" placeholder="Description">
+                        <input type="number" id="expense-amount" placeholder="Amount">
+                        <select id="expense-category">
+                            <option>Software</option>
+                            <option>Equipment</option>
+                            <option>Marketing</option>
+                            <option>Education</option>
+                            <option>Travel</option>
+                        </select>
+                        <button onclick="addExpense()">Add Expense</button>
+                    </div>
+                    <div>
+                        <h3>Profitability</h3>
+                        <div>Gross Margin: <span id="gross-margin">0%</span></div>
+                        <div>Net Profit: $<span id="net-profit">0</span></div>
+                        <div>Hourly Rate: $<span id="hourly-rate">0</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-2">
+                    <div>
+                        <h3>Invoicing</h3>
+                        <select id="invoice-client">
+                            <option>Select Client</option>
+                        </select>
+                        <input type="number" id="invoice-amount" placeholder="Amount">
+                        <textarea id="invoice-description" placeholder="Description" rows="3"></textarea>
+                        <button onclick="createInvoice()">Create Invoice</button>
+                    </div>
+                    <div>
+                        <h3>Outstanding Invoices</h3>
+                        <div id="invoice-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Automation -->
+            <div id="automation-mgmt" class="management-section hidden">
+                <div class="grid grid-2">
+                    <div>
+                        <h3>Email Templates</h3>
+                        <select id="template-type">
+                            <option>Follow-up</option>
+                            <option>Project Kickoff</option>
+                            <option>Invoice Reminder</option>
+                            <option>Project Completion</option>
+                        </select>
+                        <textarea id="email-template" rows="6" placeholder="Enter email template..."></textarea>
+                        <button onclick="saveTemplate()">Save Template</button>
+                    </div>
+                    <div>
+                        <h3>Automated Actions</h3>
+                        <div>
+                            <input type="checkbox" id="auto-invoice"> Auto-invoice on completion
+                        </div>
+                        <div>
+                            <input type="checkbox" id="auto-follow"> Follow up after 3 days
+                        </div>
+                        <div>
+                            <input type="checkbox" id="auto-backup"> Daily data backup
+                        </div>
+                        <div>
+                            <input type="checkbox" id="auto-report"> Weekly performance report
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Integration Status</h3>
+                    <table>
+                        <tr><th>Platform</th><th>Status</th><th>Last Sync</th><th>Features</th></tr>
+                        <tr><td>PayPal</td><td>Connected</td><td>2 min ago</td><td>Payment processing</td></tr>
+                        <tr><td>Stripe</td><td>Connected</td><td>5 min ago</td><td>Subscription billing</td></tr>
+                        <tr><td>QuickBooks</td><td>Not Connected</td><td>Never</td><td>Accounting sync</td></tr>
+                        <tr><td>Gmail</td><td>Connected</td><td>1 min ago</td><td>Email automation</td></tr>
+                        <tr><td>Upwork</td><td>Premium Feature</td><td>-</td><td>Job feed import</td></tr>
+                        <tr><td>Fiverr</td><td>Premium Feature</td><td>-</td><td>Gig analytics</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global data storage
+        let data = {
+            jobs: [],
+            clients: [],
+            projects: [],
+            expenses: [],
+            invoices: [],
+            timeEntries: [],
+            proposals: [],
+            templates: {}
+        };
+
+        // Timer state
+        let timerRunning = false;
+        let currentSessionStart = null;
+        let selectedJobIndex = -1;
+
+        // Initialize
+        loadData();
+        updateDashboard();
+
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(section).classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        function showManagementTab(tab) {
+            document.querySelectorAll('.management-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('#business-management .tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab + '-mgmt').classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('freelanceOS');
+            if (saved) {
+                data = {...data, ...JSON.parse(saved)};
+                updateAllDisplays();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('freelanceOS', JSON.stringify(data));
+        }
+
+        // Job Analysis Functions
+        function importJobs() {
+            const file = document.getElementById('csvFile').files[0];
+            if (!file) return;
+            
+            Papa.parse(file, {
+                header: true,
+                complete: function(results) {
+                    data.jobs = results.data.filter(row => row.job_title);
+                    // Process budget fields correctly
+                    data.jobs.forEach(job => {
+                        job.budget_value = cleanBudgetValue(job.budget_fixed) || 
+                                          (cleanBudgetValue(job.budget_min) + cleanBudgetValue(job.budget_max)) / 2 ||
+                                          cleanBudgetValue(job.budget_min) ||
+                                          cleanBudgetValue(job.budget_max) || 0;
+                    });
+                    saveData();
+                    updateJobDisplay();
+                    updateMarketOverview();
+                    updateDashboard();
+                }
+            });
+        }
+
+        function cleanBudgetValue(str) {
+            if (!str) return 0;
+            const cleaned = str.toString().replace(/[$,\s]/g, '');
+            const num = parseFloat(cleaned);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function updateMarketOverview() {
+            if (data.jobs.length === 0) return;
+            
+            const avgBudget = data.jobs.reduce((sum, job) => sum + job.budget_value, 0) / data.jobs.length;
+            const highValueJobs = data.jobs.filter(j => j.budget_value > 1000).length;
+            const lowCompetitionJobs = data.jobs.filter(j => {
+                const proposals = parseInt(j.proposals?.match(/\d+/)?.[0] || 999);
+                return proposals < 5;
+            }).length;
+            
+            document.getElementById('market-overview').innerHTML = `
+                <div><strong>${data.jobs.length}</strong> opportunities imported</div>
+                <div><strong>$${avgBudget.toFixed(0)}</strong> average budget</div>
+                <div><strong>${highValueJobs}</strong> high-value jobs ($1000+)</div>
+                <div><strong>${lowCompetitionJobs}</strong> low-competition jobs</div>
+            `;
+
+            document.getElementById('ai-market-insights').innerHTML = `
+                <div>• ${((highValueJobs/data.jobs.length)*100).toFixed(1)}% of jobs are high-value</div>
+                <div>• ${((lowCompetitionJobs/data.jobs.length)*100).toFixed(1)}% have low competition</div>
+                <div>• Best opportunities combine both factors</div>
+            `;
+        }
+
+        function filterJobs() {
+            updateJobDisplay();
+        }
+
+        function updateJobDisplay() {
+            const filter = document.getElementById('budget-filter')?.value;
+            let jobs = data.jobs;
+            
+            if (filter === 'high') jobs = jobs.filter(j => j.budget_value >= 1000);
+            if (filter === 'medium') jobs = jobs.filter(j => j.budget_value >= 500 && j.budget_value < 1000);
+            if (filter === 'low') jobs = jobs.filter(j => j.budget_value < 500);
+
+            const html = jobs.map((job, i) => {
+                const originalIndex = data.jobs.indexOf(job);
+                const proposals = parseInt(job.proposals?.match(/\d+/)?.[0] || 999);
+                const competitionLevel = proposals < 5 ? 'LOW' : proposals < 15 ? 'MED' : 'HIGH';
+                const competitionClass = proposals < 5 ? 'high-value' : '';
+                
+                return `
+                    <div class="job-item ${competitionClass} ${selectedJobIndex === originalIndex ? 'selected' : ''}" onclick="selectJob(${originalIndex})">
+                        <div><strong>${job.job_title || 'Untitled'}</strong></div>
+                        <div>Budget: $${job.budget_value || 0} | Type: ${job.contract_type || 'Unknown'}</div>
+                        <div>Competition: ${competitionLevel} (${job.proposals || '0'} proposals)</div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('job-list').innerHTML = html || '<div style="text-align:center; color:#666; margin-top:50px;">No jobs match filter</div>';
+        }
+
+        function selectJob(index) {
+            selectedJobIndex = index;
+            const job = data.jobs[index];
+            
+            // Update selected state
+            document.querySelectorAll('.job-item').forEach(item => item.classList.remove('selected'));
+            document.querySelectorAll('.job-item')[index]?.classList.add('selected');
+            
+            // Analyze the job
+            const clientAnalysis = analyzeJobClient(job);
+            const leadIntelligence = analyzeJobLead(job);
+            const proposalText = generateJobProposal(job, clientAnalysis.dominantType);
+            
+            document.getElementById('job-analysis-panel').innerHTML = `
+                <!-- Job Details -->
+                <div class="job-detail-section">
+                    <h4>Job Details</h4>
+                    <div><strong>Title:</strong> ${job.job_title}</div>
+                    <div><strong>Budget:</strong> $${job.budget_value} (${job.contract_type})</div>
+                    <div><strong>Competition:</strong> ${job.proposals}</div>
+                    <div><strong>Risk Score:</strong> ${calculateRiskScore(job)}/100</div>
+                    <div><strong>AI Match Score:</strong> ${calculateAIScore(job)}/100</div>
+                    <div style="margin-top:10px;"><strong>Description:</strong></div>
+                    <div style="font-size:12px; max-height:100px; overflow-y:auto; border:1px solid #ccc; padding:5px;">
+                        ${job.job_description || 'No description available'}
+                    </div>
+                </div>
+
+                <!-- Client Psychology Analysis -->
+                <div class="job-detail-section">
+                    <h4>Client Psychology Analysis</h4>
+                    <div><strong>Detected Types:</strong></div>
+                    <div style="margin:5px 0;">
+                        ${clientAnalysis.allTypes.map(type => 
+                            `<span class="personality-badge">${type.name} (${type.confidence}%)</span>`
+                        ).join('')}
+                    </div>
+                    <div style="font-size:12px; color:#666; margin-top:5px;">
+                        Keywords: ${clientAnalysis.keywords.join(', ') || 'none found'}
+                    </div>
+                    <div style="margin-top:10px;"><strong>Communication Strategy:</strong></div>
+                    <div style="font-size:12px; padding:5px; border:1px solid #ccc;">
+                        ${clientAnalysis.strategy}
+                    </div>
+                </div>
+
+                <!-- Lead Intelligence -->
+                <div class="job-detail-section">
+                    <h4>Lead Intelligence</h4>
+                    <div class="grid grid-3" style="gap:10px;">
+                        <div>
+                            <strong>Opportunity Score:</strong><br>
+                            ${leadIntelligence.score}/100
+                        </div>
+                        <div>
+                            <strong>Competition Level:</strong><br>
+                            ${leadIntelligence.competition}
+                        </div>
+                        <div>
+                            <strong>Success Probability:</strong><br>
+                            ${leadIntelligence.probability}%
+                        </div>
+                    </div>
+                    <div style="margin-top:10px; font-size:12px;">
+                        <strong>Recommendation:</strong> ${leadIntelligence.recommendation}
+                    </div>
+                </div>
+
+                <!-- Proposal Generator -->
+                <div class="job-detail-section">
+                    <h4>AI-Generated Proposal</h4>
+                    <div style="margin-bottom:10px;">
+                        <strong>Optimized for:</strong> ${clientAnalysis.dominantType} client type
+                    </div>
+                    <textarea rows="12" style="width:100%; font-size:12px;" readonly>${proposalText}</textarea>
+                    <div style="margin-top:10px;">
+                        <button onclick="copyProposal()" style="margin-right:10px;">Copy Proposal</button>
+                        <button onclick="saveJobProposal(${index})">Save to Proposals</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function analyzeJobClient(job) {
+            const text = ((job.job_description || '') + ' ' + (job.job_title || '')).toLowerCase();
+            
+            const keywords = {
+                'time-starved': ['urgent', 'asap', 'quickly', 'fast', 'rush', 'immediately'],
+                'creative': ['creative', 'design', 'artistic', 'visual', 'brand', 'aesthetic'],
+                'budget': ['budget', 'cheap', 'affordable', 'cost', 'price', 'final'],
+                'analytical': ['data', 'metrics', 'analysis', 'report', 'technical', 'detailed'],
+                'agency': ['team', 'company', 'organization', 'process', 'workflow'],
+                'executive': ['strategy', 'growth', 'scale', 'enterprise', 'business']
+            };
+            
+            let scores = {};
+            let allFoundKeywords = [];
+            
+            Object.keys(keywords).forEach(type => {
+                scores[type] = 0;
+                keywords[type].forEach(keyword => {
+                    if (text.includes(keyword)) {
+                        scores[type]++;
+                        if (!allFoundKeywords.includes(keyword)) {
+                            allFoundKeywords.push(keyword);
+                        }
+                    }
+                });
+            });
+            
+            // Find dominant type
+            let maxScore = 0;
+            let dominantType = 'analytical';
+            Object.keys(scores).forEach(type => {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    dominantType = type;
+                }
+            });
+
+            // Create all types with confidence
+            const typeNames = {
+                'time-starved': 'Time-Starved',
+                'creative': 'Creative', 
+                'budget': 'Budget-Conscious',
+                'analytical': 'Analytical',
+                'agency': 'Agency',
+                'executive': 'Executive'
+            };
+
+            const allTypes = Object.keys(scores)
+                .filter(type => scores[type] > 0)
+                .map(type => ({
+                    name: typeNames[type],
+                    confidence: Math.min(95, 60 + (scores[type] * 8))
+                }))
+                .sort((a, b) => b.confidence - a.confidence);
+
+            if (allTypes.length === 0) {
+                allTypes.push({ name: 'Analytical', confidence: 60 });
+            }
+            
+            const strategies = {
+                'time-starved': 'Emphasize speed and efficiency. Use urgent language. Provide clear timelines.',
+                'creative': 'Focus on vision and aesthetics. Use emotional language. Show portfolio examples.',
+                'budget': 'Emphasize value and ROI. Break down costs clearly. Offer package deals.',
+                'analytical': 'Provide detailed specifications. Use data and metrics. Show process clearly.',
+                'agency': 'Focus on process and workflow. Emphasize team collaboration.',
+                'executive': 'Think big picture and strategy. Focus on business impact and ROI.'
+            };
+            
+            return {
+                dominantType: typeNames[dominantType],
+                allTypes: allTypes,
+                keywords: allFoundKeywords,
+                strategy: strategies[dominantType]
+            };
+        }
+
+        function analyzeJobLead(job) {
+            const proposals = parseInt(job.proposals?.match(/\d+/)?.[0] || 999);
+            const budget = job.budget_value || 0;
+            
+            let score = 50;
+            let competition = 'HIGH';
+            
+            // Competition analysis
+            if (proposals < 5) {
+                score += 30;
+                competition = 'LOW';
+            } else if (proposals < 15) {
+                score += 15;
+                competition = 'MEDIUM';
+            }
+            
+            // Budget analysis
+            if (budget > 1000) score += 20;
+            else if (budget > 500) score += 10;
+            
+            // Description quality
+            if (job.job_description && job.job_description.length > 200) score += 10;
+            
+            const probability = Math.min(95, score);
+            
+            let recommendation = '';
+            if (score > 80) recommendation = 'HIGH PRIORITY - Apply immediately';
+            else if (score > 60) recommendation = 'GOOD OPPORTUNITY - Apply within 24 hours';
+            else recommendation = 'CONSIDER - Lower priority opportunity';
+            
+            return {
+                score: Math.min(100, score),
+                competition: competition,
+                probability: probability,
+                recommendation: recommendation
+            };
+        }
+
+        function generateJobProposal(job, clientType) {
+            const budget = job.budget_value || 0;
+            const title = job.job_title || 'this project';
+            
+            const templates = {
+                'Time-Starved': `Hi! I understand time is critical for your ${title}. I can start immediately and deliver within your timeline.
+
+Key benefits:
+• Same-day project kickoff
+• Daily progress updates
+• 24-48 hour initial deliverables
+• Streamlined approval process
+
+Your $${budget} budget works perfectly for expedited delivery. I specialize in rapid execution without compromising quality.
+
+I'm available to discuss timeline details immediately.
+
+Best regards`,
+
+                'Creative': `Hi! Your ${title} vision truly excites me. I'll bring fresh creativity and innovative thinking to exceed your expectations.
+
+My creative process:
+• Inspiration & mood boarding
+• Multiple concept exploration
+• Iterative design refinement
+• Polished final execution
+
+Your $${budget} budget allows for thorough creative exploration. I'd love to share relevant portfolio pieces that showcase similar innovative work.
+
+Let's create something truly remarkable together!
+
+Best regards`,
+
+                'Budget-Conscious': `Hello! I understand budget efficiency is important for your ${title}. Here's how I maximize value:
+
+Value maximizers:
+• No hidden fees or surprises
+• Efficient development process
+• Reusable components where possible
+• Knowledge transfer included
+
+Your $${budget} budget will be utilized efficiently with full transparency. I believe in delivering maximum value within budget constraints.
+
+Best regards`,
+
+                'Analytical': `Hello! I've thoroughly analyzed your ${title} requirements. My systematic approach includes:
+
+1. Detailed project planning
+2. Structured development phases
+3. Quality assurance testing
+4. Performance metrics & reporting
+
+Technical approach:
+• Comprehensive documentation
+• Regular milestone reviews
+• Data-driven decision making
+• Measurable deliverables
+
+Your $${budget} investment will deliver quantifiable results.
+
+Best regards`,
+
+                'Agency': `Hello! I understand the importance of seamless integration with your ${title} workflow.
+
+My process includes:
+• Detailed project planning & documentation
+• Regular stakeholder communications
+• Milestone-based delivery schedule
+• Team collaboration protocols
+
+Your $${budget} budget accommodates comprehensive project management. I'm experienced working with agency environments and multiple stakeholders.
+
+Best regards`,
+
+                'Executive': `Hello! I appreciate the strategic importance of your ${title} to your business objectives.
+
+Strategic approach:
+• Business impact assessment
+• Scalable solution architecture
+• Performance measurement framework
+• Long-term growth considerations
+
+Your $${budget} investment will drive measurable business results and advance your broader business strategy.
+
+Best regards`
+            };
+
+            return templates[clientType] || templates['Analytical'];
+        }
+
+        function calculateRiskScore(job) {
+            let score = 50;
+            if (job.client_rating && parseFloat(job.client_rating) > 4.5) score += 20;
+            const proposals = parseInt(job.proposals?.match(/\d+/)?.[0] || 999);
+            if (proposals < 5) score += 20;
+            if (job.budget_value > 1000) score += 10;
+            return Math.min(100, score);
+        }
+
+        function calculateAIScore(job) {
+            let score = 40;
+            if (job.job_description && job.job_description.length > 200) score += 30;
+            if (job.required_skills) score += 20;
+            if (job.budget_value > 500) score += 10;
+            return Math.min(100, score);
+        }
+
+        function copyProposal() {
+            const textarea = document.querySelector('#job-analysis-panel textarea');
+            if (textarea) {
+                textarea.select();
+                document.execCommand('copy');
+                alert('Proposal copied to clipboard!');
+            }
+        }
+
+        function saveJobProposal(jobIndex) {
+            const job = data.jobs[jobIndex];
+            const textarea = document.querySelector('#job-analysis-panel textarea');
+            
+            if (textarea && job) {
+                const proposal = {
+                    client: job.job_title,
+                    project: job.job_title,
+                    content: textarea.value,
+                    value: job.budget_value || 0,
+                    sent: new Date().toISOString(),
+                    status: 'draft'
+                };
+                
+                if (!data.proposals) data.proposals = [];
+                data.proposals.push(proposal);
+                saveData();
+                alert('Proposal saved!');
+            }
+        }
+
+        // Business Management Functions
+        function addClient() {
+            const client = {
+                name: document.getElementById('client-name').value,
+                email: document.getElementById('client-email').value,
+                company: document.getElementById('client-company').value,
+                rate: parseFloat(document.getElementById('client-rate').value) || 0,
+                type: document.getElementById('client-type').value,
+                added: new Date().toISOString(),
+                projects: 0,
+                totalValue: 0
+            };
+            
+            data.clients.push(client);
+            saveData();
+            updateClientDisplay();
+            updateClientSelects();
+            clearClientForm();
+        }
+
+        function clearClientForm() {
+            document.getElementById('client-name').value = '';
+            document.getElementById('client-email').value = '';
+            document.getElementById('client-company').value = '';
+            document.getElementById('client-rate').value = '';
+        }
+
+        function updateClientDisplay() {
+            const html = data.clients.map(client => `
+                <div class="client-card">
+                    <h4>${client.name} (${client.company})</h4>
+                    <div>Type: ${client.type} | Projects: ${client.projects}</div>
+                    <div>Email: ${client.email} | Rate: $${client.rate}/hr | Total Value: $${client.totalValue}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('client-list').innerHTML = html;
+            
+            // Update client stats
+            document.getElementById('total-clients').textContent = data.clients.length;
+            document.getElementById('active-client-projects').textContent = data.projects.filter(p => p.status === 'active').length;
+            document.getElementById('avg-client-value').textContent = data.clients.length > 0 ? 
+                (data.clients.reduce((sum, c) => sum + c.totalValue, 0) / data.clients.length).toFixed(0) : '0';
+        }
+
+        function updateClientSelects() {
+            const options = data.clients.map((client, i) => 
+                `<option value="${i}">${client.name} (${client.company})</option>`
+            ).join('');
+            
+            document.getElementById('project-client-select').innerHTML = '<option>Select Client</option>' + options;
+            document.getElementById('invoice-client').innerHTML = '<option>Select Client</option>' + options;
+        }
+
+        // Project Management Functions
+        function createProject() {
+            const clientIndex = parseInt(document.getElementById('project-client-select').value);
+            const project = {
+                name: document.getElementById('project-name').value,
+                clientIndex: clientIndex,
+                budget: parseFloat(document.getElementById('project-budget').value) || 0,
+                deadline: document.getElementById('project-deadline').value,
+                status: 'active',
+                created: new Date().toISOString(),
+                timeSpent: 0
+            };
+            
+            data.projects.push(project);
+            if (clientIndex >= 0) {
+                data.clients[clientIndex].projects++;
+                data.clients[clientIndex].totalValue += project.budget;
+            }
+            
+            saveData();
+            updateProjectDisplay();
+            updateProjectSelects();
+            updateClientDisplay();
+            clearProjectForm();
+        }
+
+        function clearProjectForm() {
+            document.getElementById('project-name').value = '';
+            document.getElementById('project-budget').value = '';
+            document.getElementById('project-deadline').value = '';
+        }
+
+        function updateProjectDisplay() {
+            const html = data.projects.map(project => {
+                const client = data.clients[project.clientIndex];
+                const deadline = new Date(project.deadline);
+                const isOverdue = deadline < new Date() && project.status === 'active';
+                
+                return `
+                    <div class="project-card status-${project.status}">
+                        <h4>${project.name}</h4>
+                        <div>Client: ${client ? client.name : 'Unknown'}</div>
+                        <div>Budget: $${project.budget} | Status: ${project.status}</div>
+                        <div>Deadline: ${project.deadline || 'Not set'} ${isOverdue ? '(OVERDUE)' : ''}</div>
+                        <div>Time Spent: ${Math.floor(project.timeSpent / 3600)}h ${Math.floor((project.timeSpent % 3600) / 60)}m</div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('project-list').innerHTML = html;
+            
+            // Update project stats
+            const active = data.projects.filter(p => p.status === 'active');
+            const completed = data.projects.filter(p => p.status === 'completed');
+            const overdue = data.projects.filter(p => {
+                const deadline = new Date(p.deadline);
+                return deadline < new Date() && p.status === 'active';
+            });
+            
+            document.getElementById('active-project-count').textContent = active.length;
+            document.getElementById('completed-projects').textContent = completed.length;
+            document.getElementById('on-schedule').textContent = active.length - overdue.length;
+            document.getElementById('overdue-projects').textContent = overdue.length;
+        }
+
+        function updateProjectSelects() {
+            const options = data.projects.filter(p => p.status === 'active').map((project, i) => 
+                `<option value="${data.projects.indexOf(project)}">${project.name}</option>`
+            ).join('');
+            
+            document.getElementById('time-project').innerHTML = '<option>Select Project</option>' + options;
+        }
+
+        // Time Tracking Functions
+        function toggleTimer() {
+            if (timerRunning) {
+                timerRunning = false;
+                const projectIndex = parseInt(document.getElementById('time-project').value);
+                const task = document.getElementById('time-task').value;
+                
+                if (projectIndex >= 0 && currentSessionStart) {
+                    const duration = Math.floor((Date.now() - currentSessionStart) / 1000);
+                    data.projects[projectIndex].timeSpent += duration;
+                    
+                    if (!data.timeEntries) data.timeEntries = [];
+                    data.timeEntries.push({
+                        projectIndex,
+                        task,
+                        duration,
+                        date: new Date().toISOString()
+                    });
+                }
+                
+                document.getElementById('time-toggle').textContent = 'Start Timer';
+                document.getElementById('time-task').value = '';
+                currentSessionStart = null;
+                saveData();
+                updateProjectDisplay();
+                updateTodaysTasks();
+            } else {
+                if (document.getElementById('time-project').value === 'Select Project') {
+                    alert('Please select a project first');
+                    return;
+                }
+                if (!document.getElementById('time-task').value) {
+                    alert('Please enter a task description');
+                    return;
+                }
+                
+                timerRunning = true;
+                currentSessionStart = Date.now();
+                document.getElementById('time-toggle').textContent = 'Stop Timer';
+            }
+        }
+
+        function updateTodaysTasks() {
+            if (!data.timeEntries) return;
+            
+            const today = new Date().toDateString();
+            const todayEntries = data.timeEntries.filter(entry => 
+                new Date(entry.date).toDateString() === today
+            );
+            
+            const html = todayEntries.map(entry => {
+                const project = data.projects[entry.projectIndex];
+                const duration = Math.floor(entry.duration / 60);
+                return `
+                    <div class="task-entry">
+                        ${project ? project.name : 'Unknown'}: ${entry.task} (${duration}m)
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('todays-tasks').innerHTML = html;
+            
+            // Update today's time
+            const totalToday = todayEntries.reduce((sum, entry) => sum + entry.duration, 0);
+            const hours = Math.floor(totalToday / 3600);
+            const minutes = Math.floor((totalToday % 3600) / 60);
+            document.getElementById('today-time').textContent = `${hours}h ${minutes}m`;
+        }
+
+        // Timer display update
+        setInterval(() => {
+            if (timerRunning && currentSessionStart) {
+                const elapsed = Math.floor((Date.now() - currentSessionStart) / 1000);
+                const hours = Math.floor(elapsed / 3600);
+                const minutes = Math.floor((elapsed % 3600) / 60);
+                const seconds = elapsed % 60;
+                
+                document.getElementById('current-time').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else if (!timerRunning) {
+                document.getElementById('current-time').textContent = '00:00:00';
+            }
+        }, 1000);
+
+        // Financial Functions
+        function addExpense() {
+            const expense = {
+                description: document.getElementById('expense-desc').value,
+                amount: parseFloat(document.getElementById('expense-amount').value) || 0,
+                category: document.getElementById('expense-category').value,
+                date: new Date().toISOString()
+            };
+            
+            data.expenses.push(expense);
+            saveData();
+            updateFinancialDisplay();
+            clearExpenseForm();
+        }
+
+        function clearExpenseForm() {
+            document.getElementById('expense-desc').value = '';
+            document.getElementById('expense-amount').value = '';
+        }
+
+        function createInvoice() {
+            const clientIndex = parseInt(document.getElementById('invoice-client').value);
+            const invoice = {
+                clientIndex: clientIndex,
+                amount: parseFloat(document.getElementById('invoice-amount').value) || 0,
+                description: document.getElementById('invoice-description').value,
+                date: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            data.invoices.push(invoice);
+            saveData();
+            updateInvoiceDisplay();
+            updateFinancialDisplay();
+            clearInvoiceForm();
+        }
+
+        function clearInvoiceForm() {
+            document.getElementById('invoice-amount').value = '';
+            document.getElementById('invoice-description').value = '';
+        }
+
+        function updateInvoiceDisplay() {
+            const html = data.invoices.map((invoice, i) => {
+                const client = data.clients[invoice.clientIndex];
+                return `
+                    <div onclick="toggleInvoiceStatus(${i})" style="cursor:pointer;">
+                        ${client ? client.name : 'Unknown'} - $${invoice.amount} (${invoice.status})
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('invoice-list').innerHTML = html;
+        }
+
+        function toggleInvoiceStatus(index) {
+            const invoice = data.invoices[index];
+            invoice.status = invoice.status === 'pending' ? 'paid' : 'pending';
+            saveData();
+            updateInvoiceDisplay();
+            updateFinancialDisplay();
+        }
+
+        function updateFinancialDisplay() {
+            const totalInvoiced = data.invoices.reduce((sum, inv) => sum + inv.amount, 0);
+            const paidInvoices = data.invoices.filter(inv => inv.status === 'paid').reduce((sum, inv) => sum + inv.amount, 0);
+            const outstanding = totalInvoiced - paidInvoices;
+            const totalExpenses = data.expenses.reduce((sum, exp) => sum + exp.amount, 0);
+            const totalTime = (data.timeEntries || []).reduce((sum, entry) => sum + entry.duration, 0);
+            
+            document.getElementById('month-revenue').textContent = paidInvoices.toFixed(0);
+            document.getElementById('outstanding').textContent = outstanding.toFixed(0);
+            document.getElementById('this-month').textContent = paidInvoices.toFixed(0);
+            document.getElementById('net-profit').textContent = (paidInvoices - totalExpenses).toFixed(0);
+            document.getElementById('hourly-rate').textContent = totalTime > 0 ? (paidInvoices / (totalTime / 3600)).toFixed(0) : '0';
+            
+            const grossMargin = totalInvoiced > 0 ? (((paidInvoices - totalExpenses) / paidInvoices) * 100).toFixed(1) : 0;
+            document.getElementById('gross-margin').textContent = grossMargin + '%';
+        }
+
+        // Dashboard Updates
+        function updateDashboard() {
+            const revenue = data.invoices.filter(inv => inv.status === 'paid').reduce((sum, inv) => sum + inv.amount, 0);
+            const activeProjects = data.projects.filter(p => p.status === 'active').length;
+            const totalProposals = (data.proposals || []).length;
+            const wonProposals = (data.proposals || []).filter(p => p.status === 'won').length;
+            const winRate = totalProposals > 0 ? ((wonProposals / totalProposals) * 100).toFixed(1) : 0;
+            const avgValue = data.projects.length > 0 ? (revenue / data.projects.length).toFixed(0) : 0;
+            
+            document.getElementById('revenue').textContent = '$' + revenue.toFixed(0);
+            document.getElementById('active-projects').textContent = activeProjects;
+            document.getElementById('win-rate').textContent = winRate + '%';
+            document.getElementById('avg-value').textContent = '$' + avgValue;
+        }
+
+        function updateAllDisplays() {
+            updateJobDisplay();
+            updateClientDisplay();
+            updateProjectDisplay();
+            updateInvoiceDisplay();
+            updateFinancialDisplay();
+            updateClientSelects();
+            updateProjectSelects();
+            updateDashboard();
+            updateTodaysTasks();
+            updateMarketOverview();
+        }
+
+        // Automation Functions
+        function saveTemplate() {
+            const type = document.getElementById('template-type').value;
+            const content = document.getElementById('email-template').value;
+            
+            if (!data.templates) data.templates = {};
+            data.templates[type] = content;
+            saveData();
+            alert('Template saved');
+        }
+
+        // Initialize displays
+        updateAllDisplays();
+    </script>
+</body>
+</html>
