@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, type FC } from 'react';
 
 interface CSVImportProps {
   onImport: (rows: string[][]) => void;
 }
 
-const CSVImport = ({ onImport }: CSVImportProps) => {
+const CSVImport: FC<CSVImportProps> = ({ onImport }) => {
   const [drag, setDrag] = useState(false);
 
   const handleFiles = async (files: FileList | null) => {
@@ -35,6 +35,7 @@ const CSVImport = ({ onImport }: CSVImportProps) => {
       <input
         type="file"
         accept=".csv"
+        aria-label="Upload CSV file"
         onChange={(e) => handleFiles(e.target.files)}
       />
       <p>Drag & drop CSV or click to browse</p>
