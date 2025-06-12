@@ -5,11 +5,15 @@ import MoodSelector from '../components/MoodSelector';
 import ProgressSteps, { type Step } from '../components/ProgressSteps';
 import MetricCard from '../components/MetricCard';
 import CSVImport from '../components/CSVImport';
+import ClientForm from '../components/ClientForm';
+import ClientList from '../components/ClientList';
 import '../proto.css';
 
 const ProtoMVP = () => {
   const [tab, setTab] = useState<'opportunity' | 'business'>('opportunity');
   const [step, setStep] = useState(0);
+  const [jobs, setJobs] = useState<string[]>([]);
+  const [clients, setClients] = useState<{ name: string; email: string }[]>([]);
 
   const steps: Step[] = [
     { label: 'Welcome' },
@@ -48,10 +52,16 @@ const ProtoMVP = () => {
           <h2>Opportunity Intelligence & Proposal Engine</h2>
           <div className="grid cols-3">
             <Card title="Import Job Data">
-              <CSVImport onImport={() => setStep(1)} />
+              <CSVImport
+                onImport={(rows) => {
+                  const titles = rows.slice(1).map((r) => r[0]);
+                  setJobs(titles);
+                  setStep(1);
+                }}
+              />
             </Card>
             <Card title="Market Overview">
-              <MetricCard value="0" label="Jobs Loaded" />
+              <MetricCard value={jobs.length} label="Jobs Loaded" />
             </Card>
             <Card title="AI Insights">
               <ul>
@@ -61,6 +71,13 @@ const ProtoMVP = () => {
               </ul>
             </Card>
           </div>
+          {jobs.length > 0 && (
+            <ul>
+              {jobs.map((j: string) => (
+                <li key={j}>{j}</li>
+              ))}
+            </ul>
+          )}
         </section>
       )}
 
@@ -73,6 +90,12 @@ const ProtoMVP = () => {
             <Card title="Win Rate">0%</Card>
             <Card title="Avg Project Value">$0</Card>
           </div>
+          <ClientForm
+            onAdd={(c: { name: string; email: string }) =>
+              setClients([...clients, c])
+            }
+          />
+          {clients.length > 0 && <ClientList clients={clients} />}
         </section>
       )}
 

@@ -33,6 +33,7 @@ const CSVImport = ({ onImport }: CSVImportProps) => {
       }}
     >
       <input
+        aria-label="Upload CSV file"
         type="file"
         accept=".csv"
         onChange={(e) => handleFiles(e.target.files)}
