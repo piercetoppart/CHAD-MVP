@@ -1027,6 +1027,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/papaparse@npm:5.3.6":
+  version: 5.3.6
+  resolution: "@types/papaparse@npm:5.3.6"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/ee573696f5fcc545035a944238dbc839acbe642349fa56f99943752c63917339d05b8fbcb9f0e21f6829c4ee2310bcf9ad085572bb4a83c0b299cf3f721637d9
+  languageName: node
+  linkType: hard
+
 "@types/qs@npm:*":
   version: 6.14.0
   resolution: "@types/qs@npm:6.14.0"
@@ -2696,6 +2705,7 @@ __metadata:
   resolution: "frontend@workspace:frontend"
   dependencies:
     "@eslint/js": "npm:^9.25.0"
+    "@types/papaparse": "npm:5.3.6"
     "@types/react": "npm:^19.1.2"
     "@types/react-dom": "npm:^19.1.2"
     "@vitejs/plugin-react": "npm:^4.4.1"
@@ -2703,6 +2713,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^5.2.0"
     eslint-plugin-react-refresh: "npm:^0.4.19"
     globals: "npm:^16.0.0"
+    papaparse: "npm:5.4.1"
     react: "npm:^19.1.0"
     react-dom: "npm:^19.1.0"
     react-router-dom: "npm:^7.6.2"
@@ -3954,6 +3965,13 @@ __metadata:
   version: 1.0.1
   resolution: "package-json-from-dist@npm:1.0.1"
   checksum: 10c0/62ba2785eb655fec084a257af34dbe24292ab74516d6aecef97ef72d4897310bc6898f6c85b5cd22770eaa1ce60d55a0230e150fb6a966e3ecd6c511e23d164b
+  languageName: node
+  linkType: hard
+
+"papaparse@npm:5.4.1":
+  version: 5.4.1
+  resolution: "papaparse@npm:5.4.1"
+  checksum: 10c0/201f37c4813453fed5bfb4c01816696b099d2db9ff1e8fb610acc4771fdde91d2a22b6094721edb0fedb21ca3c46f04263f68be4beb3e35b8c72278f0cedc7b7
   languageName: node
   linkType: hard
 
