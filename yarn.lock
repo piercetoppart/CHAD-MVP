@@ -1642,6 +1642,8 @@ __metadata:
     eslint-plugin-react: "npm:^7.37.5"
     husky: "npm:^8.0.0"
     prettier: "npm:^3.5.3"
+    react: "npm:^19.1.0"
+    react-dom: "npm:^19.1.0"
     react-router-dom: "npm:^7.6.2"
     typescript: "npm:^5.8.3"
   languageName: unknown
