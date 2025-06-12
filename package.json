@@ -1,0 +1,14 @@
+{
+  "name": "chad-mvp",
+  "private": true,
+  "packageManager": "yarn@4.6.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "lint": "echo 'linting'",
+    "typecheck": "echo 'typecheck'",
+    "test": "echo 'test'"
+  }
+}
