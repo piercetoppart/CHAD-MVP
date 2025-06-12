@@ -5,12 +5,12 @@ Built with **React 18 + TypeScript (frontend)**, **Node.js API (backend)**, **Po
 
 ## Monorepo structure
 
-/frontend – React UI, component library, state machines
-/backend – Express/Nest API, WebSocket gateways, Codex hooks
-/ml – TensorFlow.js models & training notebooks
-/database – SQL migrations & seeders
-/docs – Wireframes, pitch deck, implementation guides
-/scripts – Local dev / deployment helpers
+- /frontend – React UI, component library, state machines
+- /backend – Express/Nest API, WebSocket gateways, Codex hooks
+- /ml – TensorFlow.js models & training notebooks
+- /database – SQL migrations & seeders
+- /docs – Wireframes, pitch deck, implementation guides
+- /scripts – Local dev / deployment helpers
 
 git clone https://github.com/piercetoppart/CHAD-MVP.git
 cd CHAD-MVP
