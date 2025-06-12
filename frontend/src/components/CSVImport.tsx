@@ -14,7 +14,7 @@ const CSVImport = ({ onImport }: CSVImportProps) => {
     const rows = text
       .trim()
       .split(/\r?\n/)
-      .map((r) => r.split(','));
+      .map((line) => line.match(/("[^"]*"|[^,]+)/g) || []);
     onImport(rows);
   };
 

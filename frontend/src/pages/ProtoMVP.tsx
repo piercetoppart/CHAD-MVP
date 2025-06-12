@@ -5,11 +5,14 @@ import MoodSelector from '../components/MoodSelector';
 import ProgressSteps, { type Step } from '../components/ProgressSteps';
 import MetricCard from '../components/MetricCard';
 import CSVImport from '../components/CSVImport';
+import JobCard from '../components/JobCard';
+import SuccessCheckmark from '../components/SuccessCheckmark';
 import '../proto.css';
 
 const ProtoMVP = () => {
   const [tab, setTab] = useState<'opportunity' | 'business'>('opportunity');
   const [step, setStep] = useState(0);
+  const [jobSelected, setJobSelected] = useState(false);
 
   const steps: Step[] = [
     { label: 'Welcome' },
@@ -48,7 +51,12 @@ const ProtoMVP = () => {
           <h2>Opportunity Intelligence & Proposal Engine</h2>
           <div className="grid cols-3">
             <Card title="Import Job Data">
-              <CSVImport onImport={() => setStep(1)} />
+              <CSVImport
+                onImport={(rows) => {
+                  void rows.length;
+                  setStep(1);
+                }}
+              />
             </Card>
             <Card title="Market Overview">
               <MetricCard value="0" label="Jobs Loaded" />
@@ -60,6 +68,20 @@ const ProtoMVP = () => {
                 <li>Pricing optimization tips</li>
               </ul>
             </Card>
+          </div>
+          <div style={{ marginTop: '1rem' }}>
+            <JobCard
+              title="Full-Stack Developer for SaaS Platform"
+              budget="$5,000 - $10,000"
+              posted="2 hours ago"
+              location="Remote"
+              match={95}
+              competition="3"
+              urgent
+              selected={jobSelected}
+              onSelect={() => setJobSelected(true)}
+            />
+            <SuccessCheckmark visible={jobSelected} />
           </div>
         </section>
       )}
