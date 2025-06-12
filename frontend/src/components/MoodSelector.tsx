@@ -5,7 +5,11 @@ const moods = ['😊', '😐', '😔'];
 const MoodSelector: FC = () => (
   <div className="mood-selector">
     {moods.map((mood) => (
-      <button key={mood} aria-label={`Select mood ${mood}`}>
+      <button
+        key={mood}
+        aria-label={`Select mood ${mood}`}
+        title={`Mood ${mood}`}
+      >
         {mood}
       </button>
     ))}

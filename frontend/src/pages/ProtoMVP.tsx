@@ -10,6 +10,7 @@ import '../proto.css';
 const ProtoMVP = () => {
   const [tab, setTab] = useState<'opportunity' | 'business'>('opportunity');
   const [step, setStep] = useState(0);
+  const [jobs, setJobs] = useState<string[][]>([]);
 
   const steps: Step[] = [
     { label: 'Welcome' },
@@ -17,6 +18,17 @@ const ProtoMVP = () => {
     { label: 'Platform' },
     { label: 'Analysis' },
   ];
+
+  const loadSampleData = async () => {
+    const res = await fetch('/sample-jobs.csv');
+    const text = await res.text();
+    const rows = text
+      .trim()
+      .split(/\r?\n/)
+      .map((r) => r.split(','));
+    setJobs(rows.slice(1));
+    setStep(1);
+  };
 
   return (
     <div className="container">
@@ -48,10 +60,18 @@ const ProtoMVP = () => {
           <h2>Opportunity Intelligence & Proposal Engine</h2>
           <div className="grid cols-3">
             <Card title="Import Job Data">
-              <CSVImport onImport={() => setStep(1)} />
+              <CSVImport
+                onImport={(rows) => {
+                  setJobs(rows.slice(1));
+                  setStep(1);
+                }}
+              />
+              <button className="button mt-2" onClick={loadSampleData}>
+                Use Sample Data
+              </button>
             </Card>
             <Card title="Market Overview">
-              <MetricCard value="0" label="Jobs Loaded" />
+              <MetricCard value={jobs.length.toString()} label="Jobs Loaded" />
             </Card>
             <Card title="AI Insights">
               <ul>
@@ -61,6 +81,13 @@ const ProtoMVP = () => {
               </ul>
             </Card>
           </div>
+          {jobs.length > 0 && (
+            <ul className="mt-2">
+              {jobs.map((j, idx) => (
+                <li key={idx}>{j[0]}</li>
+              ))}
+            </ul>
+          )}
         </section>
       )}
 

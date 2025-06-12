@@ -15,6 +15,7 @@ const ProgressSteps: FC<ProgressStepsProps> = ({ steps, current }) => (
       <div key={step.label} className="step-wrapper">
         <div
           className={`step-circle ${idx < current ? 'completed' : ''} ${idx === current ? 'active' : ''}`}
+          aria-current={idx === current ? 'step' : undefined}
         >
           {idx < current ? '✓' : idx + 1}
         </div>

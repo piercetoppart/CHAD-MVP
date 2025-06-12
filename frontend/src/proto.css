@@ -115,3 +115,7 @@ header {
   display: block;
   margin: 0 auto 0.5rem;
 }
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
