@@ -115,3 +115,9 @@ header {
   display: block;
   margin: 0 auto 0.5rem;
 }
+
+body.hyperfocus header,
+body.hyperfocus .mood-selector,
+body.hyperfocus .tabs {
+  display: none;
+}

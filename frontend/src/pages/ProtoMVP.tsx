@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Card from '../components/Card';
 import MoodSelector from '../components/MoodSelector';
@@ -10,6 +10,14 @@ import '../proto.css';
 const ProtoMVP = () => {
   const [tab, setTab] = useState<'opportunity' | 'business'>('opportunity');
   const [step, setStep] = useState(0);
+  const [jobs, setJobs] = useState<string[][]>([]);
+  const [mood, setMood] = useState<string | null>(null);
+  const [focus, setFocus] = useState(false);
+
+  useEffect(() => {
+    if (focus) document.body.classList.add('hyperfocus');
+    else document.body.classList.remove('hyperfocus');
+  }, [focus]);
 
   const steps: Step[] = [
     { label: 'Welcome' },
@@ -48,16 +56,28 @@ const ProtoMVP = () => {
           <h2>Opportunity Intelligence & Proposal Engine</h2>
           <div className="grid cols-3">
             <Card title="Import Job Data">
-              <CSVImport onImport={() => setStep(1)} />
+              <CSVImport
+                onImport={(rows) => {
+                  setJobs(rows.slice(1));
+                  setStep(1);
+                }}
+              />
             </Card>
             <Card title="Market Overview">
-              <MetricCard value="0" label="Jobs Loaded" />
+              <MetricCard value={jobs.length} label="Jobs Loaded" />
             </Card>
             <Card title="AI Insights">
               <ul>
                 <li>Import jobs to see market analysis</li>
                 <li>Client psychology patterns</li>
                 <li>Pricing optimization tips</li>
+              </ul>
+            </Card>
+            <Card title="Job List">
+              <ul>
+                {jobs.map((row, idx) => (
+                  <li key={idx}>{row[0]}</li>
+                ))}
               </ul>
             </Card>
           </div>
@@ -76,7 +96,19 @@ const ProtoMVP = () => {
         </section>
       )}
 
-      <MoodSelector />
+      <MoodSelector
+        onSelect={(m) => {
+          setMood(m);
+          setStep(2);
+        }}
+      />
+      {mood && <p>Current mood: {mood}</p>}
+      <button onClick={() => setFocus(!focus)}>
+        {focus ? 'Exit Hyperfocus' : 'Enter Hyperfocus'}
+      </button>
+      <button onClick={() => alert('Joining coworking...')}>
+        Join Coworking
+      </button>
     </div>
   );
 };
