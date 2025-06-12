@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
+import ProtoMVP from './pages/ProtoMVP';
 
-function App() {
+function Home() {
   const [count, setCount] = useState(0);
-
   return (
     <>
       <div>
@@ -18,17 +19,20 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <button onClick={() => setCount((c) => c + 1)}>count is {count}</button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/proto" element={<ProtoMVP />} />
+      </Routes>
+    </Router>
   );
 }
 
