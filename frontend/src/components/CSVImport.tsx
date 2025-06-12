@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Papa from 'papaparse';
 
 interface CSVImportProps {
   onImport: (rows: string[][]) => void;
@@ -11,11 +12,12 @@ const CSVImport = ({ onImport }: CSVImportProps) => {
     if (!files?.length) return;
     const file = files[0];
     const text = await file.text();
-    const rows = text
-      .trim()
-      .split(/\r?\n/)
-      .map((r) => r.split(','));
-    onImport(rows);
+    const result = Papa.parse<string[]>(text.trim(), {
+      skipEmptyLines: true,
+    });
+    if (result.data) {
+      onImport(result.data as string[][]);
+    }
   };
 
   return (
@@ -35,6 +37,7 @@ const CSVImport = ({ onImport }: CSVImportProps) => {
       <input
         type="file"
         accept=".csv"
+        aria-label="Upload CSV"
         onChange={(e) => handleFiles(e.target.files)}
       />
       <p>Drag & drop CSV or click to browse</p>

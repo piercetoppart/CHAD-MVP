@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
@@ -19,8 +19,13 @@ function Home() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((c) => c + 1)}>count is {count}</button>
+        <button type="button" onClick={() => setCount((c) => c + 1)}>
+          count is {count}
+        </button>
       </div>
+      <p>
+        <Link to="/proto">Go to Proto MVP</Link>
+      </p>
     </>
   );
 }
