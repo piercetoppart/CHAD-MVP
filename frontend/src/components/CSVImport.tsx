@@ -32,9 +32,14 @@ const CSVImport = ({ onImport }: CSVImportProps) => {
         handleFiles(e.dataTransfer.files);
       }}
     >
+      <label htmlFor="csv-input" className="sr-only">
+        Upload CSV
+      </label>
       <input
+        id="csv-input"
         type="file"
         accept=".csv"
+        aria-label="Upload CSV"
         onChange={(e) => handleFiles(e.target.files)}
       />
       <p>Drag & drop CSV or click to browse</p>

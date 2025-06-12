@@ -5,6 +5,7 @@ import MoodSelector from '../components/MoodSelector';
 import ProgressSteps, { type Step } from '../components/ProgressSteps';
 import MetricCard from '../components/MetricCard';
 import CSVImport from '../components/CSVImport';
+import JobCard from '../components/JobCard';
 import '../proto.css';
 
 const ProtoMVP = () => {
@@ -51,7 +52,11 @@ const ProtoMVP = () => {
               <CSVImport onImport={() => setStep(1)} />
             </Card>
             <Card title="Market Overview">
-              <MetricCard value="0" label="Jobs Loaded" />
+              <MetricCard
+                value={5}
+                label="Jobs Loaded"
+                trend={{ direction: 'up', text: '+5 today' }}
+              />
             </Card>
             <Card title="AI Insights">
               <ul>
@@ -59,6 +64,17 @@ const ProtoMVP = () => {
                 <li>Client psychology patterns</li>
                 <li>Pricing optimization tips</li>
               </ul>
+            </Card>
+            <Card title="Sample Job">
+              <JobCard
+                title="Full-Stack Developer for SaaS Platform"
+                budget="$5,000 - $10,000"
+                posted="Posted 2 hours ago"
+                location="Remote"
+                match={95}
+                competition="Low Competition (3)"
+                urgent="Urgent"
+              />
             </Card>
           </div>
         </section>
