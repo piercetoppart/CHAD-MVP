@@ -5,11 +5,36 @@ import MoodSelector from '../components/MoodSelector';
 import ProgressSteps, { type Step } from '../components/ProgressSteps';
 import MetricCard from '../components/MetricCard';
 import CSVImport from '../components/CSVImport';
+import InvoiceForm, { type InvoiceInput } from '../components/InvoiceForm';
+import InvoiceList, { type Invoice } from '../components/InvoiceList';
 import '../proto.css';
 
 const ProtoMVP = () => {
   const [tab, setTab] = useState<'opportunity' | 'business'>('opportunity');
   const [step, setStep] = useState(0);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+
+  const handleAddInvoice = (invoice: InvoiceInput) => {
+    setInvoices((prev) => [
+      ...prev,
+      { id: Date.now(), paid: false, ...invoice },
+    ]);
+  };
+
+  const toggleInvoicePaid = (id: number) => {
+    setInvoices((prev) =>
+      prev.map((inv) => (inv.id === id ? { ...inv, paid: !inv.paid } : inv))
+    );
+  };
+
+  const totalInvoiced = invoices.reduce((sum, inv) => sum + inv.amount, 0);
+  const paidTotal = invoices
+    .filter((inv) => inv.paid)
+    .reduce((sum, inv) => sum + inv.amount, 0);
+  const netProfit = paidTotal;
+  const grossMargin = totalInvoiced
+    ? ((netProfit / totalInvoiced) * 100).toFixed(1)
+    : '0';
 
   const steps: Step[] = [
     { label: 'Welcome' },
@@ -67,11 +92,19 @@ const ProtoMVP = () => {
       {tab === 'business' && (
         <section>
           <h2>Business Management System</h2>
+          <InvoiceForm onAdd={handleAddInvoice} />
+          <InvoiceList invoices={invoices} onTogglePaid={toggleInvoicePaid} />
           <div className="grid cols-4">
-            <Card title="Monthly Revenue">$0</Card>
-            <Card title="Active Projects">0</Card>
-            <Card title="Win Rate">0%</Card>
-            <Card title="Avg Project Value">$0</Card>
+            <MetricCard
+              value={`$${paidTotal.toFixed(0)}`}
+              label="Monthly Revenue"
+            />
+            <MetricCard value={`$${netProfit.toFixed(0)}`} label="Net Profit" />
+            <MetricCard value={`${grossMargin}%`} label="Gross Margin" />
+            <MetricCard
+              value={`$${totalInvoiced.toFixed(0)}`}
+              label="Total Invoiced"
+            />
           </div>
         </section>
       )}
