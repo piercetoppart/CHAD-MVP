@@ -14,7 +14,9 @@ Built with **React 18 + TypeScript (frontend)**, **Node.js API (backend)**, **Po
 
 git clone https://github.com/piercetoppart/CHAD-MVP.git
 cd CHAD-MVP
-./scripts/dev.sh # spins up Postgres, Redis, frontend & backend
+./scripts/dev.sh # starts frontend & backend only
+
+# Run ./setup.sh first if you need Postgres & Redis running
 
 ### Linting
 
